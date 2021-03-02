@@ -53,7 +53,7 @@ import (
 
 func main() {
   r := gin.Default()
-  store, _ := sessions.NewRedisStore(10, "tcp", "localhost:6379", "", []byte("secret"))
+  store, _ := sessions.NewRedisStore(10, "tcp", "localhost:6379", "123456", []byte("secret"))
   r.Use(sessions.Sessions("session", store))
 
   r.GET("/incr", func(c *gin.Context) {

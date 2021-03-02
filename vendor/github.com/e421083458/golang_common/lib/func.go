@@ -29,18 +29,13 @@ var LocalIP = net.ParseIP("127.0.0.1")
 //函数传入配置文件 Init("./conf/dev/")
 //如果配置文件为空，会从命令行中读取 	  -config conf/dev/
 func Init(configPath string) error {
-	return InitModule(configPath,[]string{"base","mysql","redis"})
+	return InitModule(configPath, []string{"base", "mysql", "redis"})
 }
 
 //模块初始化
-func InitModule(configPath string,modules []string) error {
-	var conf *string
-	if len(configPath) > 0 {
-		conf = &configPath
-	} else {
-		conf = flag.String("config", "", "input config file like ./conf/dev/")
-		flag.Parse()
-	}
+func InitModule(configPath string, modules []string) error {
+	conf := flag.String("config", configPath, "input config file like ./conf/dev/")
+	flag.Parse()
 	if *conf == "" {
 		flag.Usage()
 		os.Exit(1)
@@ -67,21 +62,21 @@ func InitModule(configPath string,modules []string) error {
 	}
 
 	// 加载base配置
-	if InArrayString("base",modules){
+	if InArrayString("base", modules) {
 		if err := InitBaseConf(GetConfPath("base")); err != nil {
 			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitBaseConf:"+err.Error())
 		}
 	}
 
 	// 加载redis配置
-	if InArrayString("redis",modules) {
+	if InArrayString("redis", modules) {
 		if err := InitRedisConf(GetConfPath("redis_map")); err != nil {
 			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitRedisConf:"+err.Error())
 		}
 	}
 
 	// 加载mysql配置并初始化实例
-	if InArrayString("mysql",modules) {
+	if InArrayString("mysql", modules) {
 		if err := InitDBPool(GetConfPath("mysql_map")); err != nil {
 			fmt.Printf("[ERROR] %s%s\n", time.Now().Format(TimeFormat), " InitDBPool:"+err.Error())
 		}
@@ -148,7 +143,7 @@ func HttpGET(trace *TraceContext, urlString string, urlParams url.Values, msTime
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "GET",
 			"args":      urlParams,
-			"result":    string(body),
+			"result":    Substr(string(body), 0, 1024),
 			"err":       err.Error(),
 		})
 		return nil, nil, err
@@ -158,7 +153,7 @@ func HttpGET(trace *TraceContext, urlString string, urlParams url.Values, msTime
 		"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 		"method":    "GET",
 		"args":      urlParams,
-		"result":    string(body),
+		"result":    Substr(string(body), 0, 1024),
 	})
 	return resp, body, nil
 }
@@ -171,7 +166,8 @@ func HttpPOST(trace *TraceContext, urlString string, urlParams url.Values, msTim
 	if contextType == "" {
 		contextType = "application/x-www-form-urlencoded"
 	}
-	req, err := http.NewRequest("POST", urlString, strings.NewReader(urlParams.Encode()))
+	urlParamEncode := urlParams.Encode()
+	req, err := http.NewRequest("POST", urlString, strings.NewReader(urlParamEncode))
 	if len(header) > 0 {
 		req.Header = header
 	}
@@ -183,7 +179,7 @@ func HttpPOST(trace *TraceContext, urlString string, urlParams url.Values, msTim
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "POST",
-			"args":      urlParams,
+			"args":      Substr(urlParamEncode, 0, 1024),
 			"err":       err.Error(),
 		})
 		return nil, nil, err
@@ -195,8 +191,8 @@ func HttpPOST(trace *TraceContext, urlString string, urlParams url.Values, msTim
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "POST",
-			"args":      urlParams,
-			"result":    string(body),
+			"args":      Substr(urlParamEncode, 0, 1024),
+			"result":    Substr(string(body), 0, 1024),
 			"err":       err.Error(),
 		})
 		return nil, nil, err
@@ -205,8 +201,8 @@ func HttpPOST(trace *TraceContext, urlString string, urlParams url.Values, msTim
 		"url":       urlString,
 		"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 		"method":    "POST",
-		"args":      urlParams,
-		"result":    string(body),
+		"args":      Substr(urlParamEncode, 0, 1024),
+		"result":    Substr(string(body), 0, 1024),
 	})
 	return resp, body, nil
 }
@@ -228,7 +224,7 @@ func HttpJSON(trace *TraceContext, urlString string, jsonContent string, msTimeo
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "POST",
-			"args":      jsonContent,
+			"args":      Substr(jsonContent, 0, 1024),
 			"err":       err.Error(),
 		})
 		return nil, nil, err
@@ -240,8 +236,8 @@ func HttpJSON(trace *TraceContext, urlString string, jsonContent string, msTimeo
 			"url":       urlString,
 			"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 			"method":    "POST",
-			"args":      jsonContent,
-			"result":    string(body),
+			"args":      Substr(jsonContent, 0, 1024),
+			"result":    Substr(string(body), 0, 1024),
 			"err":       err.Error(),
 		})
 		return nil, nil, err
@@ -250,8 +246,8 @@ func HttpJSON(trace *TraceContext, urlString string, jsonContent string, msTimeo
 		"url":       urlString,
 		"proc_time": float32(time.Now().UnixNano()-startTime) / 1.0e9,
 		"method":    "POST",
-		"args":      jsonContent,
-		"result":    string(body),
+		"args":      Substr(jsonContent, 0, 1024),
+		"result":    Substr(string(body), 0, 1024),
 	})
 	return resp, body, nil
 }
@@ -269,10 +265,10 @@ func addTrace2Header(request *http.Request, trace *TraceContext) *http.Request {
 	traceId := trace.TraceId
 	cSpanId := NewSpanId()
 	if traceId != "" {
-		request.Header.Set("header-rid", traceId)
+		request.Header.Set("didi-header-rid", traceId)
 	}
 	if cSpanId != "" {
-		request.Header.Set("header-spanid", cSpanId)
+		request.Header.Set("didi-header-spanid", cSpanId)
 	}
 	trace.CSpanId = cSpanId
 	return request
@@ -363,11 +359,26 @@ func GetLocalIPs() (ips []net.IP) {
 	return ips
 }
 
-func InArrayString(s string,arr []string) bool{
-	for _,i:=range arr{
-		if i==s{
+func InArrayString(s string, arr []string) bool {
+	for _, i := range arr {
+		if i == s {
 			return true
 		}
 	}
 	return false
+}
+
+//Substr 字符串的截取
+func Substr(str string, start int64, end int64) string {
+	length := int64(len(str))
+	if start < 0 || start > length {
+		return ""
+	}
+	if end < 0 {
+		return ""
+	}
+	if end > length {
+		end = length
+	}
+	return string(str[start:end])
 }

@@ -1,10 +1,11 @@
 package dao
 
 import (
-	"github.com/e421083458/gin_scaffold/public"
+	"time"
+
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
-	"time"
+	"github.com/xiet16/gin_scaffold/public"
 )
 
 type Area struct {
@@ -21,7 +22,7 @@ func (t *Area) TableName() string {
 }
 
 func (t *Area) Find(c *gin.Context, tx *gorm.DB, id string) (*Area, error) {
-	area:=&Area{}
+	area := &Area{}
 	err := tx.SetCtx(public.GetGinTraceContext(c)).Where("id = ?", id).Find(area).Error
 	if err != nil {
 		return nil, err

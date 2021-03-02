@@ -21,7 +21,7 @@ Gin best practices, gin development scaffolding, too late to explain, get on the
 4. 封装了 log/redis/mysql/http.client 常用方法
 5. 支持swagger文档生成
 
-项目地址：https://github.com/e421083458/gin_scaffold
+项目地址：https://github.com/xiet16/go_gateway_gin_scaffold
 ### 现在开始
 - 安装软件依赖
 go mod使用请查阅：

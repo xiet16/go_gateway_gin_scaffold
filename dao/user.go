@@ -1,11 +1,12 @@
 package dao
 
 import (
-	"github.com/e421083458/gin_scaffold/dto"
-	"github.com/e421083458/gin_scaffold/public"
+	"time"
+
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
-	"time"
+	"github.com/xiet16/gin_scaffold/dto"
+	"github.com/xiet16/gin_scaffold/public"
 )
 
 type ListPageOutput struct {

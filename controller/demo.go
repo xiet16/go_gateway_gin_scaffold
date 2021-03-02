@@ -1,13 +1,13 @@
 package controller
 
 import (
-	"github.com/e421083458/gin_scaffold/dao"
-	"github.com/e421083458/gin_scaffold/dto"
-	"github.com/e421083458/gin_scaffold/middleware"
-	"github.com/e421083458/gin_scaffold/public"
 	"github.com/e421083458/golang_common/lib"
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/xiet16/gin_scaffold/dao"
+	"github.com/xiet16/gin_scaffold/dto"
+	"github.com/xiet16/gin_scaffold/middleware"
+	"github.com/xiet16/gin_scaffold/public"
 )
 
 type DemoController struct {
@@ -32,7 +32,7 @@ func (demo *DemoController) Dao(c *gin.Context) {
 		middleware.ResponseError(c, 2000, err)
 		return
 	}
-	area, err := (&dao.Area{}).Find(c, tx, c.DefaultQuery("id", "1"));
+	area, err := (&dao.Area{}).Find(c, tx, c.DefaultQuery("id", "1"))
 	if err != nil {
 		middleware.ResponseError(c, 2001, err)
 		return
