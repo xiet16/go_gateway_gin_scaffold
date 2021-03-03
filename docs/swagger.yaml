@@ -37,6 +37,18 @@ definitions:
         example: token
         type: string
     type: object
+  dto.ChangePwdInput:
+    properties:
+      password:
+        example: 密码
+        type: string
+      userName:
+        example: 用户名
+        type: string
+    required:
+    - password
+    - userName
+    type: object
   dto.DemoInput:
     properties:
       age:
@@ -90,6 +102,34 @@ paths:
       summary: 管理员信息接口
       tags:
       - 管理员信息接口
+  /admin/changepwd:
+    post:
+      consumes:
+      - application/json
+      description: 更改管理员密码
+      operationId: /admin/changepwd
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ChangePwdInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: 更改管理员密码
+      tags:
+      - 更改管理员密码
   /admin_login/login:
     post:
       consumes:

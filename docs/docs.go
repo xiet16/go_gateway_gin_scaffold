@@ -60,6 +60,53 @@ var doc = `{
                 }
             }
         },
+        "/admin/changepwd": {
+            "post": {
+                "description": "更改管理员密码",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "更改管理员密码"
+                ],
+                "summary": "更改管理员密码",
+                "operationId": "/admin/changepwd",
+                "parameters": [
+                    {
+                        "description": "body",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ChangePwdInput"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/admin_login/login": {
             "post": {
                 "description": "管理员登录接口",
@@ -244,6 +291,23 @@ var doc = `{
                 "token": {
                     "type": "string",
                     "example": "token"
+                }
+            }
+        },
+        "dto.ChangePwdInput": {
+            "type": "object",
+            "required": [
+                "password",
+                "userName"
+            ],
+            "properties": {
+                "password": {
+                    "type": "string",
+                    "example": "密码"
+                },
+                "userName": {
+                    "type": "string",
+                    "example": "用户名"
                 }
             }
         },
