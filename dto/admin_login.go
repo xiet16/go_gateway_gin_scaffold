@@ -13,3 +13,7 @@ type AdminLoginInput struct {
 func (param *AdminLoginInput) BindValidParam(c *gin.Context) error {
 	return public.DefaultGetValidParams(c, param)
 }
+
+type AdminLoginOutput struct {
+	Token string `json:"token" form:"token" comment:"token" example:"token" validate:""`
+}
