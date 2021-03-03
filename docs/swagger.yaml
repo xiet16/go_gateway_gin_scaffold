@@ -65,14 +65,33 @@ definitions:
     - name
     - passwd
     type: object
+  dto.ServiceListItemOutput:
+    properties:
+      id:
+        type: integer
+      loadType:
+        type: integer
+      pageSize:
+        type: string
+      qpd:
+        type: integer
+      qps:
+        type: integer
+      serviceAddr:
+        type: string
+      serviceName:
+        type: string
+      totalNode:
+        type: integer
+    type: object
   dto.ServiceListOutput:
     properties:
-      serviceName:
-        example: 服务名
-        type: string
+      list:
+        items:
+          $ref: '#/definitions/dto.ServiceListItemOutput'
+        type: array
       total:
-        example: 总条数
-        type: string
+        type: integer
     type: object
   middleware.Response:
     properties:

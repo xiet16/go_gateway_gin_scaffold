@@ -391,16 +391,46 @@ var doc = `{
                 }
             }
         },
+        "dto.ServiceListItemOutput": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "loadType": {
+                    "type": "integer"
+                },
+                "pageSize": {
+                    "type": "string"
+                },
+                "qpd": {
+                    "type": "integer"
+                },
+                "qps": {
+                    "type": "integer"
+                },
+                "serviceAddr": {
+                    "type": "string"
+                },
+                "serviceName": {
+                    "type": "string"
+                },
+                "totalNode": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.ServiceListOutput": {
             "type": "object",
             "properties": {
-                "serviceName": {
-                    "type": "string",
-                    "example": "服务名"
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.ServiceListItemOutput"
+                    }
                 },
                 "total": {
-                    "type": "string",
-                    "example": "总条数"
+                    "type": "integer"
                 }
             }
         },
