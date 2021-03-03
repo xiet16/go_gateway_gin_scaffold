@@ -236,6 +236,64 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/service/service_list": {
+            "get": {
+                "description": "服务列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "服务列表"
+                ],
+                "summary": "服务列表",
+                "operationId": "/service/service_list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "关键词",
+                        "name": "info",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页大小",
+                        "name": "pageSize",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "当前页数",
+                        "name": "pageNo",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.ServiceListOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -330,6 +388,19 @@ var doc = `{
                 "passwd": {
                     "type": "string",
                     "example": "123456"
+                }
+            }
+        },
+        "dto.ServiceListOutput": {
+            "type": "object",
+            "properties": {
+                "serviceName": {
+                    "type": "string",
+                    "example": "服务名"
+                },
+                "total": {
+                    "type": "string",
+                    "example": "总条数"
                 }
             }
         },
