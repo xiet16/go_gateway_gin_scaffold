@@ -4,7 +4,6 @@ go 1.15
 
 require (
 	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
-	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/e421083458/gin_scaffold v0.0.0-20200502033629-13733b8c6903
 	github.com/e421083458/golang_common v1.1.2
 	github.com/e421083458/gorm v1.0.1
@@ -16,7 +15,6 @@ require (
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pkg/errors v0.9.1
-	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.7.0
