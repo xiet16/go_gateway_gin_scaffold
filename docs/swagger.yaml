@@ -1,4 +1,22 @@
 definitions:
+  dto.AdminLoginInput:
+    properties:
+      password:
+        example: 密码
+        type: string
+      userName:
+        example: 用户名
+        type: string
+    required:
+    - password
+    - userName
+    type: object
+  dto.AdminLoginOutput:
+    properties:
+      token:
+        example: token
+        type: string
+    type: object
   dto.DemoInput:
     properties:
       age:
@@ -30,8 +48,35 @@ definitions:
     type: object
 info:
   contact: {}
-  license: {}
 paths:
+  /admin_login/login:
+    post:
+      consumes:
+      - application/json
+      description: 管理员登录接口
+      operationId: /admin_login/login
+      parameters:
+      - description: body
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.AdminLoginInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AdminLoginOutput'
+              type: object
+      summary: 管理员登录接口
+      tags:
+      - 管理员登录接口
   /demo/bind:
     post:
       consumes:
