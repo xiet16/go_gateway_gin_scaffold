@@ -118,6 +118,27 @@ paths:
       summary: 管理员登录接口
       tags:
       - 管理员登录接口
+  /admin_login/logout:
+    get:
+      consumes:
+      - application/json
+      description: 管理员退出接口
+      operationId: /admin_login/logout
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.AdminLoginOutput'
+              type: object
+      summary: 管理员退出接口
+      tags:
+      - 管理员退出接口
   /demo/bind:
     post:
       consumes:

@@ -107,6 +107,42 @@ var doc = `{
                 }
             }
         },
+        "/admin_login/logout": {
+            "get": {
+                "description": "管理员退出接口",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "管理员退出接口"
+                ],
+                "summary": "管理员退出接口",
+                "operationId": "/admin_login/logout",
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/middleware.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/dto.AdminLoginOutput"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/demo/bind": {
             "post": {
                 "description": "测试数据绑定",
