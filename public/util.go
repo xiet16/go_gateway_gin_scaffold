@@ -1,8 +1,10 @@
 package public
 
 import (
+	"crypto/md5"
 	"crypto/sha256"
 	"fmt"
+	"io"
 )
 
 func GenSecretPassword(secret, password string) string {
@@ -12,4 +14,11 @@ func GenSecretPassword(secret, password string) string {
 	s2 := sha256.New()
 	s2.Write([]byte(str1 + secret))
 	return fmt.Sprintf("%x", s2.Sum(nil))
+}
+
+//MD5 md5加密
+func MD5(s string) string {
+	h := md5.New()
+	io.WriteString(h, s)
+	return fmt.Sprintf("%x", h.Sum(nil))
 }

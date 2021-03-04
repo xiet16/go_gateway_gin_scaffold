@@ -13,7 +13,6 @@ require (
 	github.com/go-openapi/spec v0.20.3 // indirect
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
-	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
@@ -21,6 +20,7 @@ require (
 	github.com/swaggo/swag v1.7.0
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
 	golang.org/x/sys v0.0.0-20210301091718-77cc2087c03b // indirect
+	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4
 	golang.org/x/tools v0.1.0 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
 )

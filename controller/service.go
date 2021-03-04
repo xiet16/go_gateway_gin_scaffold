@@ -81,13 +81,13 @@ func (service *ServiceController) ServiceList(c *gin.Context) {
 		clusterSSLPort := lib.GetStringConf("base.cluster.cluster_ssl_port")
 
 		if serviceDetail.Info.LoadType == public.LoadTypeHTTP &&
-			serviceDetail.HttpRule.RuleType == public.HTTPRulrTypePrefixURL &&
+			serviceDetail.HttpRule.RuleType == public.HTTPRuleTypePrefixURL &&
 			serviceDetail.HttpRule.NeedHttps == 1 {
 			serviceAddr = fmt.Sprint("%s:%s%s", clusterIP, clusterSSLPort, serviceDetail.HttpRule.Rule)
 		}
 
 		if serviceDetail.Info.LoadType == public.LoadTypeHTTP &&
-			serviceDetail.HttpRule.RuleType == public.HTTPRulrTypePrefixURL &&
+			serviceDetail.HttpRule.RuleType == public.HTTPRuleTypePrefixURL &&
 			serviceDetail.HttpRule.NeedHttps == 0 {
 			serviceAddr = fmt.Sprint("%s:%s%s", clusterIP, clusterPort, serviceDetail.HttpRule.Rule)
 		}
