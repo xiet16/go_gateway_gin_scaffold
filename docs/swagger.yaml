@@ -268,6 +268,26 @@ definitions:
     - password
     - userName
     type: object
+  dto.DashServiceStatItemOutput:
+    properties:
+      load_type:
+        type: integer
+      name:
+        type: string
+      value:
+        type: integer
+    type: object
+  dto.DashServiceStatOutput:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/dto.DashServiceStatItemOutput'
+        type: array
+      legend:
+        items:
+          type: string
+        type: array
+    type: object
   dto.DemoInput:
     properties:
       age:
@@ -283,6 +303,17 @@ definitions:
     - age
     - name
     - passwd
+    type: object
+  dto.PanelGroupDataOutput:
+    properties:
+      appNum:
+        type: integer
+      currentQps:
+        type: integer
+      serviceNum:
+        type: integer
+      todayRequestNum:
+        type: integer
     type: object
   dto.ServiceAddGrpcInput:
     properties:
@@ -925,6 +956,69 @@ paths:
       summary: 租户更新
       tags:
       - 租户管理
+  /dashboard/flow_stat:
+    get:
+      consumes:
+      - application/json
+      description: 服务统计
+      operationId: /dashboard/flow_stat
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ServiceStatOutput'
+              type: object
+      summary: 服务统计
+      tags:
+      - 首页大盘
+  /dashboard/panelGroupData:
+    get:
+      consumes:
+      - application/json
+      description: 指标统计
+      operationId: /dashboard/panelGroupData
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.PanelGroupDataOutput'
+              type: object
+      summary: 指标统计
+      tags:
+      - 首页大盘
+  /dashboard/service_stat:
+    get:
+      consumes:
+      - application/json
+      description: 服务统计
+      operationId: /dashboard/service_stat
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.DashServiceStatOutput'
+              type: object
+      summary: 服务统计
+      tags:
+      - 首页大盘
   /demo/bind:
     post:
       consumes:
