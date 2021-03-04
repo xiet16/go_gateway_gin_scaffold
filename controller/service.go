@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/gin"
@@ -165,6 +167,31 @@ func (adminlogin *ServiceController) ServiceAddHTTP(c *gin.Context) {
 	params := &dto.ServiceAddHTTPInput{}
 	if err := params.BindValidParam(c); err != nil {
 		middleware.ResponseError(c, 2000, err)
+		return
+	}
+
+	tx, err := lib.GetGormPool("default")
+	if err != nil {
+		middleware.ResponseError(c, 2001, err)
+		return
+	}
+
+	//规则校验
+	serviceInfo := &dao.ServiceInfo{ServiceName: params.ServiceName}
+	serviceInfo, err = serviceInfo.Find(c, tx, serviceInfo)
+	if _, err = serviceInfo.Find(c, tx, serviceInfo); err == nil {
+		middleware.ResponseError(c, 2000, errors.New("服务已存在"))
+		return
+	}
+
+	httpUrl := &dao.HttpRule{RuleType: params.RuleType, Rule: params.Rule}
+	if _, err = httpUrl.Find(c, tx, httpUrl); err == nil {
+		middleware.ResponseError(c, 2000, errors.New("服务接入前缀或域名已存在"))
+		return
+	}
+
+	if len(strings.Split(params.IpList, "\n")) != len(strings.Split(params.WeightList, "\n")) {
+		middleware.ResponseError(c, 2000, errors.New("ip 列表和权重列表不一致"))
 		return
 	}
 
