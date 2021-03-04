@@ -72,7 +72,7 @@ func (t *ServiceInfo) PageList(c *gin.Context, tx *gorm.DB, param *dto.ServiceLi
 	query := tx.SetCtx(public.GetGinTraceContext(c))
 	query = query.Table(t.TableName()).Where("is_delete =0")
 	if param.Info != "" {
-		query = query.Where("service_name like %?% or service_desc like %?%")
+		query = query.Where("(service_name like ? or service_desc like ?)", "%"+param.Info+"%", "%"+param.Info+"%")
 	}
 
 	offset := (param.PageNo - 1) * param.PageSize
