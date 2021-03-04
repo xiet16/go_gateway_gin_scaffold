@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/gin"
@@ -21,6 +22,7 @@ func ServiceRegister(group *gin.RouterGroup) {
 	group.GET("/service_list", service.ServiceList)
 	group.GET("/service_delete", service.ServiceDelete)
 	group.GET("/service_detail", service.ServiceDetail)
+	group.GET("/service_stat", service.ServiceStat)
 	group.POST("/service_add_http", service.ServiceAddHTTP)
 	group.POST("/service_update_http", service.ServiceUpdateHTTP)
 }
@@ -388,4 +390,59 @@ func (service *ServiceController) ServiceDetail(c *gin.Context) {
 	}
 
 	middleware.ResponseSuccess(c, serviceDetail)
+}
+
+// ServiceStat godoc
+// @Summary 服务统计
+// @Description 服务统计
+// @Tags 服务统计
+// @ID /service/service_stat
+// @Accept  json
+// @Produce  json
+// @Param id query string true "服务ID"
+// @Success 200 {object} middleware.Response{data=dto.ServiceStatOutput} "success"
+// @Router /service/service_stat [get]
+func (service *ServiceController) ServiceStat(c *gin.Context) {
+	params := &dto.ServiceDeleteInput{}
+	if err := params.BindValidParam(c); err != nil {
+		middleware.ResponseError(c, 2000, err)
+		return
+	}
+
+	// tx, err := lib.GetGormPool("default")
+	// if err != nil {
+	// 	middleware.ResponseError(c, 2001, err)
+	// 	return
+	// }
+
+	// //从数据库取服务信息
+	// serviceInfo := &dao.ServiceInfo{ID: params.ID}
+	// serviceInfo, err = serviceInfo.Find(c, tx, serviceInfo)
+	// if err != nil {
+	// 	middleware.ResponseError(c, 2002, err)
+	// 	return
+	// }
+
+	// serviceDetail, err := serviceInfo.ServiceDetail(c, tx, serviceInfo)
+	// if err != nil {
+	// 	middleware.ResponseError(c, 2003, err)
+	// 	return
+	// }
+
+	todayList := []int64{}
+	for i := 0; i < time.Now().Hour(); i++ {
+		todayList = append(todayList, 0)
+	}
+
+	yesterdayList := []int64{}
+	for i := 0; i < time.Now().Hour(); i++ {
+		yesterdayList = append(yesterdayList, 0)
+	}
+
+	serviceStat := &dto.ServiceStatOutput{
+		Today:     todayList,
+		Yesterday: yesterdayList,
+	}
+
+	middleware.ResponseSuccess(c, serviceStat)
 }

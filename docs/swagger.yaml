@@ -286,6 +286,17 @@ definitions:
       total:
         type: integer
     type: object
+  dto.ServiceStatOutput:
+    properties:
+      today:
+        items:
+          type: integer
+        type: array
+      yesterday:
+        items:
+          type: integer
+        type: array
+    type: object
   dto.ServiceUpdateHTTPInput:
     properties:
       black_list:
@@ -623,6 +634,33 @@ paths:
       summary: 服务列表
       tags:
       - 服务列表
+  /service/service_stat:
+    get:
+      consumes:
+      - application/json
+      description: 服务统计
+      operationId: /service/service_stat
+      parameters:
+      - description: 服务ID
+        in: query
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: success
+          schema:
+            allOf:
+            - $ref: '#/definitions/middleware.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/dto.ServiceStatOutput'
+              type: object
+      summary: 服务统计
+      tags:
+      - 服务统计
   /service/service_update_http:
     post:
       consumes:
