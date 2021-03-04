@@ -175,23 +175,52 @@ func (adminlogin *ServiceController) ServiceAddHTTP(c *gin.Context) {
 		middleware.ResponseError(c, 2001, err)
 		return
 	}
-
+	tx.Begin()
 	//规则校验
 	serviceInfo := &dao.ServiceInfo{ServiceName: params.ServiceName}
-	serviceInfo, err = serviceInfo.Find(c, tx, serviceInfo)
 	if _, err = serviceInfo.Find(c, tx, serviceInfo); err == nil {
+		tx.Rollback()
 		middleware.ResponseError(c, 2000, errors.New("服务已存在"))
 		return
 	}
 
 	httpUrl := &dao.HttpRule{RuleType: params.RuleType, Rule: params.Rule}
 	if _, err = httpUrl.Find(c, tx, httpUrl); err == nil {
+		tx.Rollback()
 		middleware.ResponseError(c, 2000, errors.New("服务接入前缀或域名已存在"))
 		return
 	}
 
 	if len(strings.Split(params.IpList, "\n")) != len(strings.Split(params.WeightList, "\n")) {
+		tx.Rollback()
 		middleware.ResponseError(c, 2000, errors.New("ip 列表和权重列表不一致"))
+		return
+	}
+
+	serviceModel := &dao.ServiceInfo{
+		ServiceName: params.ServiceName,
+		ServiceDesc: params.ServiceDesc,
+	}
+	if err := serviceModel.Save(c, tx); err != nil {
+		tx.Rollback()
+		middleware.ResponseError(c, 2005, err)
+		return
+	}
+
+	httpRule := &dao.HttpRule{
+		ServiceID:      serviceModel.ID,
+		RuleType:       params.RuleType,
+		Rule:           params.Rule,
+		NeedHttps:      params.NeedHttps,
+		NeedStripUri:   params.NeedStripUri,
+		NeedWebsocket:  params.NeedWebsocket,
+		UrlRewrite:     params.UrlRewrite,
+		HeaderTransfor: params.HeaderTransfor,
+	}
+
+	if err := httpRule.Save(c, tx); err != nil {
+		tx.Rollback()
+		middleware.ResponseError(c, 2005, err)
 		return
 	}
 
