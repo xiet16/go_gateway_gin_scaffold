@@ -1,4 +1,4 @@
-module github.com/xiet16/gin_scaffold
+module github.com/xiet16/go_gateway_gin_scaffold
 
 go 1.15
 
@@ -10,17 +10,12 @@ require (
 	github.com/garyburd/redigo v1.6.2
 	github.com/gin-gonic/contrib v0.0.0-20201101042839-6a891bf89f19
 	github.com/gin-gonic/gin v1.6.3
-	github.com/go-openapi/spec v0.20.3 // indirect
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
-	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.7.0
-	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
-	golang.org/x/sys v0.0.0-20210301091718-77cc2087c03b // indirect
-	golang.org/x/time v0.0.0-20190308202827-9d24e82272b4
-	golang.org/x/tools v0.1.0 // indirect
+	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
 	gopkg.in/go-playground/validator.v9 v9.31.0
 )

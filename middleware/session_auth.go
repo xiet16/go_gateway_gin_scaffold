@@ -5,7 +5,7 @@ import (
 
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/xiet16/gin_scaffold/public"
+	"github.com/xiet16/go_gateway_gin_scaffold/public"
 )
 
 func SessionAuthMiddleware() gin.HandlerFunc {

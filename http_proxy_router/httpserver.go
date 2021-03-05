@@ -8,7 +8,7 @@ import (
 
 	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/gin"
-	"github.com/xiet16/gin_scaffold/crt_file"
+	"github.com/xiet16/go_gateway_gin_scaffold/crt_file"
 )
 
 var (

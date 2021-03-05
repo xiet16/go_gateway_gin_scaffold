@@ -8,8 +8,8 @@ import (
 	"syscall"
 
 	"github.com/e421083458/golang_common/lib"
-	"github.com/xiet16/gin_scaffold/http_proxy_router"
-	"github.com/xiet16/gin_scaffold/router"
+	"github.com/xiet16/go_gateway_gin_scaffold/http_proxy_router"
+	"github.com/xiet16/go_gateway_gin_scaffold/router"
 )
 
 //构建终端endpoint dashboard后台管理 server代理服务器

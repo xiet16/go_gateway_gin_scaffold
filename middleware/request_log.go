@@ -7,7 +7,7 @@ import (
 
 	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/gin"
-	"github.com/xiet16/gin_scaffold/public"
+	"github.com/xiet16/go_gateway_gin_scaffold/public"
 )
 
 // 请求进入日志

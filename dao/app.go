@@ -8,8 +8,8 @@ import (
 	"github.com/e421083458/golang_common/lib"
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
-	"github.com/xiet16/gin_scaffold/dto"
-	"github.com/xiet16/gin_scaffold/public"
+	"github.com/xiet16/go_gateway_gin_scaffold/dto"
+	"github.com/xiet16/go_gateway_gin_scaffold/public"
 )
 
 type App struct {

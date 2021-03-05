@@ -3,7 +3,7 @@ package dao
 import (
 	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
-	"github.com/xiet16/gin_scaffold/public"
+	"github.com/xiet16/go_gateway_gin_scaffold/public"
 )
 
 type TcpRule struct {

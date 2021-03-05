@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"github.com/xiet16/gin_scaffold/controller"
-	"github.com/xiet16/gin_scaffold/docs"
-	"github.com/xiet16/gin_scaffold/middleware"
+	"github.com/xiet16/go_gateway_gin_scaffold/controller"
+	"github.com/xiet16/go_gateway_gin_scaffold/docs"
+	"github.com/xiet16/go_gateway_gin_scaffold/middleware"
 )
 
 // @title Swagger Example API
