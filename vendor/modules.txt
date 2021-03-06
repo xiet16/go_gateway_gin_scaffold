@@ -9,18 +9,8 @@ github.com/PuerkitoBio/urlesc
 github.com/alecthomas/template
 github.com/alecthomas/template/parse
 # github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff
+## explicit
 github.com/boj/redistore
-# github.com/e421083458/gin_scaffold v0.0.0-20200502033629-13733b8c6903
-## explicit
-github.com/e421083458/gin_scaffold/public
-# github.com/e421083458/golang_common v1.1.2
-## explicit
-github.com/e421083458/golang_common/lib
-github.com/e421083458/golang_common/log
-# github.com/e421083458/gorm v1.0.1
-## explicit
-github.com/e421083458/gorm
-github.com/e421083458/gorm/dialects/mysql
 # github.com/fsnotify/fsnotify v1.4.7
 github.com/fsnotify/fsnotify
 # github.com/garyburd/redigo v1.6.2
@@ -59,6 +49,7 @@ github.com/go-playground/universal-translator
 # github.com/go-playground/validator/v10 v10.2.0
 github.com/go-playground/validator/v10
 # github.com/go-sql-driver/mysql v1.4.1
+## explicit
 github.com/go-sql-driver/mysql
 # github.com/golang/protobuf v1.3.3
 github.com/golang/protobuf/proto
@@ -70,6 +61,7 @@ github.com/gorilla/context
 # github.com/gorilla/securecookie v1.1.1
 github.com/gorilla/securecookie
 # github.com/gorilla/sessions v1.1.3
+## explicit
 github.com/gorilla/sessions
 # github.com/hashicorp/hcl v1.0.0
 github.com/hashicorp/hcl
@@ -83,6 +75,7 @@ github.com/hashicorp/hcl/json/parser
 github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
 # github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a
+## explicit
 github.com/jinzhu/inflection
 # github.com/json-iterator/go v1.1.9
 github.com/json-iterator/go
@@ -117,6 +110,7 @@ github.com/spf13/jwalterweatherman
 # github.com/spf13/pflag v1.0.3
 github.com/spf13/pflag
 # github.com/spf13/viper v1.4.0
+## explicit
 github.com/spf13/viper
 # github.com/swaggo/files v0.0.0-20190704085106-630677cd5c14
 ## explicit
@@ -151,6 +145,7 @@ golang.org/x/tools/go/buildutil
 golang.org/x/tools/go/internal/cgo
 golang.org/x/tools/go/loader
 # google.golang.org/appengine v1.6.0
+## explicit
 google.golang.org/appengine/cloudsql
 # gopkg.in/go-playground/validator.v9 v9.31.0
 ## explicit
