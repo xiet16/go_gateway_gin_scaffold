@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/e421083458/golang_common/lib"
+	"github.com/xiet16/go_gateway_gin_scaffold/golang_common/lib"
 	"github.com/xiet16/go_gateway_gin_scaffold/http_proxy_router"
 	"github.com/xiet16/go_gateway_gin_scaffold/router"
 )
@@ -33,7 +33,7 @@ func main() {
 	}
 
 	if *endpoint == "dashboard" {
-		lib.InitModule("./conf/dev/", []string{"base", "mysql", "redis"})
+		lib.InitModule(*config, []string{"base", "mysql", "redis"})
 		defer lib.Destroy()
 		router.HttpServerRun()
 
@@ -44,7 +44,7 @@ func main() {
 		router.HttpServerStop()
 	} else {
 		//加载配置
-		lib.InitModule("./conf/dev/", []string{"base", "mysql", "redis"})
+		lib.InitModule(*config, []string{"base", "mysql", "redis"})
 		defer lib.Destroy()
 		go func() {
 			http_proxy_router.HttpServerRun()
@@ -56,5 +56,4 @@ func main() {
 		<-quit
 		http_proxy_router.HttpServerStop()
 	}
-
 }

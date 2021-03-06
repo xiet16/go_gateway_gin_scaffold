@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"runtime/debug"
 
-	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/gin"
+	"github.com/xiet16/go_gateway_gin_scaffold/golang_common/lib"
 	"github.com/xiet16/go_gateway_gin_scaffold/public"
 )
 

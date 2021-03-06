@@ -6,9 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/e421083458/golang_common/lib"
 	"github.com/gin-gonic/gin"
-	"github.com/xiet16/go_gateway_gin_scaffold/crt_file"
+	"github.com/xiet16/go_gateway_gin_scaffold/golang_common/lib"
 )
 
 var (
@@ -55,7 +54,7 @@ func HttpsServerRun() {
 	}
 	go func() {
 		log.Printf(" [INFO] https_proxy:%s\n", lib.GetStringConf("proxy.https.addr"))
-		if err := HttpsSrvHandler.ListenAndServeTLS(crt_file.Path("server.crt"), crt_file.Path("server.key")); err != nil {
+		if err := HttpsSrvHandler.ListenAndServeTLS("./cert_file/server.crt", "./cert_file/server.key"); err != nil {
 			log.Fatalf(" [ERROR] https_proxy:%s err:%v\n", lib.GetStringConf("proxy.https.addr"), err)
 		}
 	}()

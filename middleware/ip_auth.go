@@ -3,8 +3,9 @@ package middleware
 import (
 	"errors"
 	"fmt"
-	"github.com/e421083458/golang_common/lib"
+
 	"github.com/gin-gonic/gin"
+	"github.com/xiet16/go_gateway_gin_scaffold/golang_common/lib"
 )
 
 func IPAuthMiddleware() gin.HandlerFunc {
@@ -15,7 +16,7 @@ func IPAuthMiddleware() gin.HandlerFunc {
 				isMatched = true
 			}
 		}
-		if !isMatched{
+		if !isMatched {
 			ResponseError(c, InternalErrorCode, errors.New(fmt.Sprintf("%v, not in iplist", c.ClientIP())))
 			c.Abort()
 			return

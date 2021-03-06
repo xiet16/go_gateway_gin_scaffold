@@ -3,8 +3,8 @@ package dao
 import (
 	"time"
 
-	"github.com/e421083458/gorm"
 	"github.com/gin-gonic/gin"
+	"github.com/xiet16/go_gateway_gin_scaffold/gorm"
 	"github.com/xiet16/go_gateway_gin_scaffold/public"
 )
 
