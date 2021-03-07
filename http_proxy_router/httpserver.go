@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiet16/go_gateway_gin_scaffold/golang_common/lib"
+	"github.com/xiet16/go_gateway_gin_scaffold/middleware"
 )
 
 var (
@@ -17,7 +18,7 @@ var (
 
 func HttpServerRun() {
 	gin.SetMode(lib.ConfBase.DebugMode)
-	r := InitRouter()
+	r := InitRouter(middleware.RecoveryMiddleware(), middleware.RequestLog())
 	HttpSrvHandler = &http.Server{
 		Addr:           lib.GetStringConf("proxy.http.addr"),
 		Handler:        r,
@@ -25,12 +26,11 @@ func HttpServerRun() {
 		WriteTimeout:   time.Duration(lib.GetIntConf("proxy.http.write_timeout")) * time.Second,
 		MaxHeaderBytes: 1 << uint(lib.GetIntConf("proxy.http.max_header_bytes")),
 	}
-	go func() {
-		log.Printf(" [INFO] http_proxy:%s\n", lib.GetStringConf("proxy.http.addr"))
-		if err := HttpSrvHandler.ListenAndServe(); err != nil {
-			log.Fatalf(" [ERROR] http_proxy:%s err:%v\n", lib.GetStringConf("proxy.http.addr"), err)
-		}
-	}()
+
+	log.Printf(" [INFO] http_proxy:%s\n", lib.GetStringConf("proxy.http.addr"))
+	if err := HttpSrvHandler.ListenAndServe(); err != nil {
+		log.Fatalf(" [ERROR] http_proxy:%s err:%v\n", lib.GetStringConf("proxy.http.addr"), err)
+	}
 }
 
 func HttpServerStop() {
@@ -44,7 +44,7 @@ func HttpServerStop() {
 
 func HttpsServerRun() {
 	gin.SetMode(lib.ConfBase.DebugMode)
-	r := InitRouter()
+	r := InitRouter(middleware.RecoveryMiddleware(), middleware.RequestLog())
 	HttpsSrvHandler = &http.Server{
 		Addr:           lib.GetStringConf("proxy.https.addr"),
 		Handler:        r,
@@ -52,12 +52,11 @@ func HttpsServerRun() {
 		WriteTimeout:   time.Duration(lib.GetIntConf("proxy.https.write_timeout")) * time.Second,
 		MaxHeaderBytes: 1 << uint(lib.GetIntConf("proxy.https.max_header_bytes")),
 	}
-	go func() {
-		log.Printf(" [INFO] https_proxy:%s\n", lib.GetStringConf("proxy.https.addr"))
-		if err := HttpsSrvHandler.ListenAndServeTLS("./cert_file/server.crt", "./cert_file/server.key"); err != nil {
-			log.Fatalf(" [ERROR] https_proxy:%s err:%v\n", lib.GetStringConf("proxy.https.addr"), err)
-		}
-	}()
+
+	log.Printf(" [INFO] https_proxy:%s\n", lib.GetStringConf("proxy.https.addr"))
+	if err := HttpsSrvHandler.ListenAndServeTLS("./cert_file/server.crt", "./cert_file/server.key"); err != nil {
+		log.Fatalf(" [ERROR] https_proxy:%s err:%v\n", lib.GetStringConf("proxy.https.addr"), err)
+	}
 }
 
 func HttpsServerStop() {

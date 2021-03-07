@@ -1,11 +1,17 @@
 package dao
 
 import (
+	"fmt"
+	"net"
+	"net/http"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/xiet16/go_gateway_gin_scaffold/gorm"
 	"github.com/xiet16/go_gateway_gin_scaffold/public"
+	"github.com/xiet16/go_gateway_gin_scaffold/reverse_proxy/load_balance"
 )
 
 type LoadBalance struct {
@@ -42,6 +48,138 @@ func (t *LoadBalance) Save(c *gin.Context, tx *gorm.DB) error {
 	return nil
 }
 
-func (t *LoadBalance) GetIPListByModel(c *gin.Context, tx *gorm.DB) []string {
+func (t *LoadBalance) GetIPListByModel() []string {
 	return strings.Split(t.IpList, ",")
+}
+
+func (t *LoadBalance) GetWeightListByModel() []string {
+	return strings.Split(t.WeightList, ",")
+}
+
+//自定义负载均衡器
+type LoadBalancer struct {
+	LoadBalanceMap   map[string]*LoadBalancerItem
+	LoadBalanceSlice []*LoadBalancerItem
+	Locker           sync.RWMutex
+}
+
+var LoadBalanceHandler *LoadBalancer
+
+func NewLoadBalancer() *LoadBalancer {
+	return &LoadBalancer{
+		LoadBalanceMap:   map[string]*LoadBalancerItem{},
+		LoadBalanceSlice: []*LoadBalancerItem{},
+		Locker:           sync.RWMutex{},
+	}
+}
+
+type LoadBalancerItem struct {
+	LoadBalance load_balance.LoadBalance
+	ServiceName string
+}
+
+func init() {
+	LoadBalanceHandler = NewLoadBalancer()
+}
+
+func (lbr *LoadBalancer) GetLoadBalancer(service *ServiceDetail) (load_balance.LoadBalance, error) {
+	for _, transItem := range lbr.LoadBalanceSlice {
+		if transItem.ServiceName == service.Info.ServiceName {
+			return transItem.LoadBalance, nil
+		}
+	}
+
+	schema := "http"
+	if service.HttpRule.NeedHttps == 1 {
+		schema = "https"
+	}
+
+	// prefix := ""
+	// if service.HttpRule.RuleType == public.HTTPRuleTypePrefixURL {
+	// 	prefix = service.HttpRule.Rule
+	// }
+	ipList := service.LoadBalance.GetIPListByModel()
+	weightList := service.LoadBalance.GetWeightListByModel()
+	ipConf := map[string]string{}
+	for ipIdex, ipItem := range ipList {
+		ipConf[ipItem] = weightList[ipIdex]
+	}
+
+	// mConf, err := load_balance.NewLoadBalanceCheckConf(
+	// 	fmt.Sprintf("http://%s/base", schema, prefix), ipConf)
+	mConf, err := load_balance.NewLoadBalanceCheckConf(
+		fmt.Sprintf("http://%s/base", schema), ipConf)
+	if err != nil {
+		return nil, err
+	}
+
+	lb := load_balance.LoadBanlanceFactorWithConf(load_balance.LbType(service.LoadBalance.RoundType), mConf)
+
+	//保存到map中，为什么要存着
+	lbItem := &LoadBalancerItem{
+		LoadBalance: lb,
+		ServiceName: service.Info.ServiceName,
+	}
+	lbr.LoadBalanceSlice = append(lbr.LoadBalanceSlice, lbItem)
+	lbr.Locker.Lock()
+	defer lbr.Locker.Unlock()
+	lbr.LoadBalanceMap[service.Info.ServiceName] = lbItem
+
+	return lb, nil
+}
+
+//定义连接池
+var TransportorHandler *Transportor
+
+type Transportor struct {
+	TransportMap   map[string]*TransportItem
+	TransportSlice []*TransportItem
+	Locker         sync.RWMutex
+}
+
+type TransportItem struct {
+	Trans       *http.Transport
+	ServiceName string
+}
+
+func NewTransportor() *Transportor {
+	return &Transportor{
+		TransportMap:   map[string]*TransportItem{},
+		TransportSlice: []*TransportItem{},
+		Locker:         sync.RWMutex{},
+	}
+}
+
+func init() {
+	TransportorHandler = NewTransportor()
+}
+
+func (t *Transportor) GetTrans(service *ServiceDetail) (*http.Transport, error) {
+	for _, transItem := range t.TransportSlice {
+		if transItem.ServiceName == service.Info.ServiceName {
+			return transItem.Trans, nil
+		}
+	}
+
+	trans := &http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout: time.Duration(service.LoadBalance.UpstreamConnectTimeout) * time.Second,
+		}).DialContext,
+		MaxIdleConns:          service.LoadBalance.UpstreamMaxIdle,
+		IdleConnTimeout:       time.Duration(service.LoadBalance.UpstreamIdleTimeout) * time.Second,
+		ResponseHeaderTimeout: time.Duration(service.LoadBalance.UpstreamHeaderTimeout) * time.Second,
+	}
+
+	transItem := &TransportItem{
+		Trans:       trans,
+		ServiceName: service.Info.ServiceName,
+	}
+
+	t.TransportSlice = append(t.TransportSlice, transItem)
+
+	t.Locker.Lock()
+	defer t.Locker.Unlock()
+	t.TransportMap[service.Info.ServiceName] = transItem
+
+	return trans, nil
 }

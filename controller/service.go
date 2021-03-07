@@ -101,7 +101,7 @@ func (service *ServiceController) ServiceList(c *gin.Context) {
 			serviceAddr = fmt.Sprint("%s:%d", clusterIP, clusterPort)
 		}
 
-		ipList := serviceDetail.LoadBalance.GetIPListByModel(c, tx)
+		ipList := serviceDetail.LoadBalance.GetIPListByModel()
 		outItem := dto.ServiceListItemOutput{
 			ID:          item.ID,
 			ServiceName: item.ServiceName,

@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/xiet16/go_gateway_gin_scaffold/dao"
 	"github.com/xiet16/go_gateway_gin_scaffold/golang_common/lib"
 	"github.com/xiet16/go_gateway_gin_scaffold/http_proxy_router"
 	"github.com/xiet16/go_gateway_gin_scaffold/router"
@@ -46,14 +47,22 @@ func main() {
 		//加载配置
 		lib.InitModule(*config, []string{"base", "mysql", "redis"})
 		defer lib.Destroy()
+		dao.ServiceManagerHandler.LoadOnce()
 		go func() {
 			http_proxy_router.HttpServerRun()
-			fmt.Println("start proxy server")
+			fmt.Println("http proxy server start")
+		}()
+
+		go func() {
+			http_proxy_router.HttpsServerRun()
+			fmt.Println("https proxy server start")
 		}()
 
 		quit := make(chan os.Signal)
 		signal.Notify(quit, syscall.SIGKILL, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGTERM)
 		<-quit
+
 		http_proxy_router.HttpServerStop()
+		http_proxy_router.HttpsServerStop()
 	}
 }
