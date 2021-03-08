@@ -89,15 +89,15 @@ func (lbr *LoadBalancer) GetLoadBalancer(service *ServiceDetail) (load_balance.L
 		}
 	}
 
-	schema := "http"
+	schema := "http://"
 	if service.HttpRule.NeedHttps == 1 {
-		schema = "https"
+		schema = "https://"
 	}
 
-	// prefix := ""
-	// if service.HttpRule.RuleType == public.HTTPRuleTypePrefixURL {
-	// 	prefix = service.HttpRule.Rule
-	// }
+	if service.Info.LoadType == public.LoadTypeTCP || service.Info.LoadType == public.LoadTypeGRPC {
+		schema = ""
+	}
+
 	ipList := service.LoadBalance.GetIPListByModel()
 	weightList := service.LoadBalance.GetWeightListByModel()
 	ipConf := map[string]string{}

@@ -30,8 +30,8 @@ func init() {
 }
 
 type ServiceManager struct {
-	serviceMap   map[string]*ServiceDetail
-	serviceSlice []*ServiceDetail
+	ServiceMap   map[string]*ServiceDetail
+	ServiceSlice []*ServiceDetail
 	Locker       sync.RWMutex
 	init         sync.Once
 	err          error
@@ -39,11 +39,22 @@ type ServiceManager struct {
 
 func NewServiceManager() *ServiceManager {
 	return &ServiceManager{
-		serviceMap:   map[string]*ServiceDetail{},
-		serviceSlice: []*ServiceDetail{},
+		ServiceMap:   map[string]*ServiceDetail{},
+		ServiceSlice: []*ServiceDetail{},
 		Locker:       sync.RWMutex{},
 		init:         sync.Once{},
 	}
+}
+
+func (s *ServiceManager) GetTcpServiceList() []*ServiceDetail {
+	list := []*ServiceDetail{}
+	for _, serviceItem := range s.ServiceSlice {
+		tempItem := serviceItem
+		if tempItem.Info.LoadType == public.LoadTypeTCP {
+			list = append(list, tempItem)
+		}
+	}
+	return list
 }
 
 func (s *ServiceManager) LoadOnce() error {
@@ -73,8 +84,8 @@ func (s *ServiceManager) LoadOnce() error {
 				s.err = err
 				return
 			}
-			s.serviceMap[tmpItem.ServiceName] = serviceDetail
-			s.serviceSlice = append(s.serviceSlice, serviceDetail)
+			s.ServiceMap[tmpItem.ServiceName] = serviceDetail
+			s.ServiceSlice = append(s.ServiceSlice, serviceDetail)
 		}
 	})
 	return s.err
@@ -89,7 +100,7 @@ func (s *ServiceManager) HttpAccessMode(c *gin.Context) (*ServiceDetail, error) 
 	fmt.Println("host: ", host)
 	path := c.Request.URL.Path
 
-	for _, serviceItem := range s.serviceSlice {
+	for _, serviceItem := range s.ServiceSlice {
 		//判断是不是http 服务
 		if serviceItem.Info.LoadType != public.LoadTypeHTTP {
 			continue

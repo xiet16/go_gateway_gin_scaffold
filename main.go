@@ -11,6 +11,7 @@ import (
 	"github.com/xiet16/go_gateway_gin_scaffold/golang_common/lib"
 	"github.com/xiet16/go_gateway_gin_scaffold/http_proxy_router"
 	"github.com/xiet16/go_gateway_gin_scaffold/router"
+	"github.com/xiet16/go_gateway_gin_scaffold/tcp_proxy_router"
 )
 
 //构建终端endpoint dashboard后台管理 server代理服务器
@@ -59,10 +60,15 @@ func main() {
 			fmt.Println("https proxy server start")
 		}()
 
+		go func() {
+			tcp_proxy_router.TcpServerRun()
+		}()
+
 		quit := make(chan os.Signal)
 		signal.Notify(quit, syscall.SIGKILL, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGTERM)
 		<-quit
 
+		tcp_proxy_router.TcpServerStop()
 		http_proxy_router.HttpServerStop()
 		http_proxy_router.HttpsServerStop()
 	}
