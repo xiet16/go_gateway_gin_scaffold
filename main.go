@@ -9,6 +9,7 @@ import (
 
 	"github.com/xiet16/go_gateway_gin_scaffold/dao"
 	"github.com/xiet16/go_gateway_gin_scaffold/golang_common/lib"
+	"github.com/xiet16/go_gateway_gin_scaffold/grpc_proxy_router"
 	"github.com/xiet16/go_gateway_gin_scaffold/http_proxy_router"
 	"github.com/xiet16/go_gateway_gin_scaffold/router"
 	"github.com/xiet16/go_gateway_gin_scaffold/tcp_proxy_router"
@@ -64,11 +65,16 @@ func main() {
 			tcp_proxy_router.TcpServerRun()
 		}()
 
+		go func() {
+			grpc_proxy_router.GrpcServerRun()
+		}()
+
 		quit := make(chan os.Signal)
 		signal.Notify(quit, syscall.SIGKILL, syscall.SIGQUIT, syscall.SIGINT, syscall.SIGTERM)
 		<-quit
 
 		tcp_proxy_router.TcpServerStop()
+		grpc_proxy_router.GrpcServerStop()
 		http_proxy_router.HttpServerStop()
 		http_proxy_router.HttpsServerStop()
 	}
