@@ -23,6 +23,6 @@ require (
 	github.com/swaggo/swag v1.7.0
 	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
 	google.golang.org/appengine v1.6.0 // indirect
-	google.golang.org/grpc v1.21.0
+	google.golang.org/grpc v1.30.0-dev.1
 	gopkg.in/go-playground/validator.v9 v9.31.0
 )
